@@ -92,10 +92,10 @@
               eventoDetails.innerHTML = `
                     <p><strong>Título do evento:</strong> ${e.titulo}</p>
                     <p><strong>Descrição do evento:</strong> ${e.description}</p>
-                    <p><strong>Data do evento:</strong> ${e.data}</p>
+                    <p><strong>Data do evento:</strong> ${formatarData(e.data)}</p>
                     <p><strong>Local do evento:</strong> ${e.local}</p>
-                    <p><strong>Criado em:</strong> ${e.criadoEm}</p>
-                    <p><strong>Atualizado em:</strong> ${e.atualizadoEm}</p>
+                    <p><strong>Criado em:</strong> ${formatarData(e.criadoEm)}</p>
+                    <p><strong>Atualizado em:</strong> ${formatarData(e.atualizadoEm)}</p>
 
                     `;
               li.appendChild(eventoDetails);
@@ -104,6 +104,12 @@
             });
           })
           .catch((error) => console.log("Error:", error)); // Captura e exibe qualquer erro que ocorrer na requisição
+      }
+
+      // Função para formatar a data no formato dd/mm/aaaa
+      function formatarData(data) {
+        const partes = data.split("-");
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
       }
 
       // Função para preencher o formulário de edição com os dados do evento selecionado

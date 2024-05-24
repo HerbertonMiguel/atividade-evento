@@ -56,15 +56,9 @@
               let eventoDetails = document.createElement("div");
               eventoDetails.className = "evento-details";
               eventoDetails.innerHTML = `
-                            <p><strong>Título do evento:</strong> ${
-                              e.titulo
-                            }</p>
-                            <p><strong>Descrição do evento:</strong> ${
-                              e.description
-                            }</p>
-                            <p><strong>Data do evento:</strong> ${formatarData(
-                              e.data
-                            )}</p>
+                            <p><strong>Título do evento:</strong> ${e.titulo}</p>
+                            <p><strong>Descrição do evento:</strong> ${e.description}</p>
+                            <p><strong>Data do evento:</strong> ${formatarData(e.data)}</p>
                             <p><strong>Local do evento:</strong> ${e.local}</p>
                         `;
               li.appendChild(eventoDetails);
