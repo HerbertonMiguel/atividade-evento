@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Listagem e cadastro de eventos</title>
+    <link rel="stylesheet" href="../css/style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Adicione um Evento</h1>
+    </header>
+    <main>
+      <section>
+        <form id="eventoForm" method="post" action="/eventos/create">
+          <label for="titulo">Título do evento:</label>
+          <input type="text" name="titulo" id="titulo" />
+          <label for="description">Descrição do evento:</label>
+          <textarea name="description" id="description"></textarea>
+          <label for="data">Data do evento:</label>
+          <input type="date" name="data" id="data" />
+          <label for="local">Local do evento:</label>
+          <input type="text" name="local" id="local" />
+          <input type="hidden" name="criadoEm" id="criadoEm" />
+          <!-- Campo oculto para armazenar a data de criação -->
+          <input class="cadastrar" type="submit" value="Cadastrar evento" />
+        </form>
+      </section>
+      <section>
+        <div id="message" class="message"></div>
+        <ul id="listagemEventos">
+          <!-- Eventos serão listados aqui -->
+        </ul>
+      </section>
+    </main>
+    <script>
+      // Função para exibir todos os eventos
+      function exibirEventos() {
+        let listagemEventos = document.getElementById("listagemEventos");
+
+        // Faz uma requisição GET para a rota /eventos
+        fetch("/eventos")
+          .then((response) => {
+            // Verifica se a resposta não é OK (status 200)
+            if (!response.ok) {
+              throw new Error("Erro ao carregar os dados"); // Lança um erro se a resposta não for bem-sucedida
+            }
+            return response.json(); // Converte a resposta em JSON
+          })
+          .then((eventos) => {
+            // Itera sobre cada evento retornado
+            eventos.forEach((e) => {
+              let li = document.createElement("li");
+              li.className = "evento-item";
+
+              let eventoDetails = document.createElement("div");
+              eventoDetails.className = "evento-details";
+              eventoDetails.innerHTML = `
+                            <p><strong>Título do evento:</strong> ${
+                              e.titulo
+                            }</p>
+                            <p><strong>Descrição do evento:</strong> ${
+                              e.description
+                            }</p>
+                            <p><strong>Data do evento:</strong> ${formatarData(
+                              e.data
+                            )}</p>
+                            <p><strong>Local do evento:</strong> ${e.local}</p>
+                        `;
+              li.appendChild(eventoDetails);
+
+              let actions = document.createElement("div");
+              actions.className = "evento-actions";
+
+              let editar = document.createElement("a");
+              editar.innerText = "Editar";
+              editar.href = `/html/edit.html?id=${e.id}`;
+              editar.classList.add("button-link");
+              actions.appendChild(editar);
+
+              let remover = document.createElement("button");
+              remover.innerText = "Remover";
+              remover.classList.add("button-remover");
+              remover.addEventListener("click", () => {
+                removerEvento(e.id);
+              });
+              actions.appendChild(remover);
+
+              li.appendChild(actions);
+              listagemEventos.appendChild(li);
+            });
+          })
+          .catch((error) => console.log("Error:", error)); // Captura e exibe qualquer erro que ocorrer na requisição
+      }
+
+      // Função para formatar a data no formato dd/mm/aaaa
+      function formatarData(data) {
+        const partes = data.split("-");
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+      }
+
+      // Função para remover um evento
+      function removerEvento(id) {
+        // Faz uma requisição DELETE para a rota /eventos/:id
+        fetch(`/eventos/${id}`, {
+          method: "DELETE", // Define o método HTTP como DELETE
+        })
+          .then((response) => {
+            // Verifica se a resposta é OK (status 200)
+            if (response.ok) {
+              showMessage("Evento removido com sucesso", "success"); // Exibe uma mensagem de sucesso
+              document.getElementById("listagemEventos").innerHTML = ""; // Limpa a lista
+              exibirEventos(); // Recarrega a lista atualizada
+            } else {
+              showMessage(
+                "Evento não existe ou não pode ser deletado",
+                "error"
+              ); // Exibe uma mensagem de erro
+              console.error("Error:", response); // Exibe o erro no console
+            }
+          })
+          .catch((error) => console.log("Error:", error)); // Captura e exibe qualquer erro que ocorrer na requisição
+      }
+
+      // Função para exibir mensagens de sucesso ou erro
+      function showMessage(text, type) {
+        const messageElement = document.getElementById("message");
+        messageElement.innerText = text;
+        messageElement.className = `message ${type}`;
+        messageElement.style.display = "block";
+        setTimeout(() => {
+          messageElement.style.display = "none";
+        }, 3000); // Esconde a mensagem após 3 segundos
+      }
+
+      // Função para preencher automaticamente o campo de criadoEm com a data atual
+      function preencherCriadoEm() {
+        const dataAtual = new Date().toISOString().split("T")[0]; // Obtém a data atual no formato YYYY-MM-DD
+        document.getElementById("criadoEm").value = dataAtual; // Define o valor do campo criadoEm como a data atual
+      }
+
+      // Adiciona um ouvinte de evento para o envio do formulário
+      document
+        .getElementById("eventoForm")
+        .addEventListener("submit", preencherCriadoEm);
+
+      // Exibe todos os eventos ao carregar a página
+      exibirEventos();
+    </script>
+  </body>
+</html>
