@@ -2,44 +2,53 @@
 <html lang="pt-br">
 
 <head>
+  <!-- Metadados básicos do documento -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Editar Eventos</title>
-  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/style.css"> <!-- Link para o arquivo CSS externo -->
 </head>
 
 <body>
+  <!-- Cabeçalho da página -->
   <header>
     <h1>Editar Eventos</h1>
     <nav>
-      <a href="/">Home</a>
-      <a href="/html/edit.html">Editar Eventos</a>
+      <a href="/">Home</a> <!-- Link para a página inicial -->
+      <a href="/html/edit.html">Editar Eventos</a> <!-- Link para a página de edição de eventos -->
     </nav>
   </header>
+
+  <!-- Conteúdo principal da página -->
   <main>
+    <!-- Seção para listar os eventos -->
     <section>
       <ul id="listagemEventos">
         <!-- Eventos serão listados aqui -->
       </ul>
     </section>
+
+    <!-- Seção para o formulário de edição -->
     <section>
       <form id="editForm" style="display: none;">
-        <input type="hidden" id="eventoId">
+        <!-- Campos do formulário para editar um evento -->
+        <input type="hidden" id="eventoId"> <!-- Campo oculto para armazenar o ID do evento -->
         <label for="editTitulo">Título do evento:</label>
-        <input type="text" id="editTitulo">
+        <input type="text" id="editTitulo"> <!-- Campo para editar o título do evento -->
         <label for="editDescription">Descrição do evento:</label>
-        <textarea id="editDescription"></textarea>
+        <textarea id="editDescription"></textarea> <!-- Campo para editar a descrição do evento -->
         <label for="editData">Data do evento:</label>
-        <input type="date" id="editData">
+        <input type="date" id="editData"> <!-- Campo para editar a data do evento -->
         <label for="editLocal">Local do evento:</label>
-        <input type="text" id="editLocal">
+        <input type="text" id="editLocal"> <!-- Campo para editar o local do evento -->
         <input type="hidden" id="criadoEm"> <!-- Campo oculto para armazenar a data de criação -->
         <input type="hidden" id="atualizadoEm"> <!-- Campo oculto para armazenar a data de última atualização -->
         <p id="exibirAtualizadoEm"></p> <!-- Parágrafo para exibir a data de última atualização -->
-        <input class="salvar" type="submit" value="Salvar alterações">
+        <input class="salvar" type="submit" value="Salvar alterações"> <!-- Botão para salvar as alterações -->
       </form>
     </section>
   </main>
+
   <script>
     // Função para preencher automaticamente os campos de atualizadoEm com a data atual
     function preencherDataAtualizacao() {
@@ -65,15 +74,12 @@
           // Itera sobre cada evento retornado
           eventos.forEach((e) => {
             // Cria o botão de editar para cada evento
-
-
             let editar = document.createElement('button');
             editar.innerText = "Editar";
             editar.classList.add('button-link');
             editar.addEventListener('click', () => {
               editarEvento(e.id, e.titulo, e.description, e.data, e.local, e.criadoEm, e.atualizadoEm);
             });
-
 
             // Cria o item da lista com o título e a descrição do evento
             let li = document.createElement('li');
@@ -82,16 +88,16 @@
             let eventoDetails = document.createElement("div");
             eventoDetails.className = "evento-details";
             eventoDetails.innerHTML = `
-            <p><strong>Título do evento:</strong> ${e.titulo}</p>
-             <p><strong>Descrição do evento:</strong> ${e.description}</p>
-             <p><strong>Data do evento:</strong> ${e.data}</p>
-             <p><strong>Local do evento:</strong> ${e.local}</p>
-             <p><strong>criado em:</strong> ${e.criadoEm}</p>
-             <p><strong>criado em:</strong> ${e.atualizadoEm}</p>
+              <p><strong>Título do evento:</strong> ${e.titulo}</p>
+              <p><strong>Descrição do evento:</strong> ${e.description}</p>
+              <p><strong>Data do evento:</strong> ${e.data}</p>
+              <p><strong>Local do evento:</strong> ${e.local}</p>
+              <p><strong>Criado em:</strong> ${e.criadoEm}</p>
+              <p><strong>Atualizado em:</strong> ${e.atualizadoEm}</p>
             `;
-            li.appendChild(eventoDetails);
-            li.appendChild(editar);
-            listagemEventos.appendChild(li);
+            li.appendChild(eventoDetails); // Adiciona os detalhes do evento ao item da lista
+            li.appendChild(editar); // Adiciona o botão de editar ao item da lista
+            listagemEventos.appendChild(li); // Adiciona o item da lista ao elemento listagemEventos
           });
         })
         .catch(error => console.log('Error:', error)); // Captura e exibe qualquer erro que ocorrer na requisição
@@ -100,15 +106,15 @@
     // Função para preencher o formulário de edição com os dados do evento selecionado
     function editarEvento(id, titulo, description, data, local, criadoEm, atualizadoEm) {
       let form = document.getElementById('editForm');
-      document.getElementById('eventoId').value = id;
-      document.getElementById('editTitulo').value = titulo;
-      document.getElementById('editDescription').value = description;
-      document.getElementById('editData').value = data;
-      document.getElementById('editLocal').value = local;
-      document.getElementById('criadoEm').value = criadoEm;
-      document.getElementById('atualizadoEm').value = atualizadoEm;
+      document.getElementById('eventoId').value = id; // Preenche o campo ID do formulário
+      document.getElementById('editTitulo').value = titulo; // Preenche o campo título do formulário
+      document.getElementById('editDescription').value = description; // Preenche o campo descrição do formulário
+      document.getElementById('editData').value = data; // Preenche o campo data do formulário
+      document.getElementById('editLocal').value = local; // Preenche o campo local do formulário
+      document.getElementById('criadoEm').value = criadoEm; // Preenche o campo criadoEm do formulário
+      document.getElementById('atualizadoEm').value = atualizadoEm; // Preenche o campo atualizadoEm do formulário
       preencherDataAtualizacao(); // Preenche automaticamente o campo de data de última atualização
-      form.style.display = 'block';
+      form.style.display = 'block'; // Exibe o formulário de edição
     }
 
     // Evento de submit do formulário de edição
