@@ -38,16 +38,6 @@ class EventoController {
     }
 
     // Método para atualizar um evento pelo ID
-    // updateEvento(req, res) {
-    //     const eventoId = req.params.id;
-    //     const { titulo, description, data, local, criadoEm, atualizadoEm } = req.body;
-    //     const eventoUpdate = eventoModel.updateEvento(eventoId, titulo, description, data, local, criadoEm, atualizadoEm);
-    //     if (!eventoUpdate) {
-    //         return res.status(404).json({ msg: 'Evento não encontrado' });
-    //     }
-    //     res.json(eventoUpdate);
-    // }
-
     updateEvento(req, res) {
         const eventoId = req.params.id;
         const { titulo, description, data, local } = req.body;
